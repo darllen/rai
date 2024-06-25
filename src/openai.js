@@ -15,7 +15,7 @@ async function transcribe(req) {
     await saveFileFromRequest(fileData, filePath);
 
     const transcription = await openai.audio.transcriptions.create({
-      file: fs.createReadStream("./src/assets/audio/teste.mp3"),
+      file: fs.createReadStream(`./src/assets/audio/${req.file.originalname}`),
       model: 'whisper-1',
     });
 
