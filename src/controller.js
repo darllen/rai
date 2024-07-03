@@ -1,4 +1,6 @@
 const openai = require('./openai');
+const PDFDocument = require('pdfkit');
+const fs = require('fs');
 
 module.exports = {
   async transcribe(req, res) {
@@ -22,8 +24,23 @@ async function manipulate(transcription){
     const techniqueUsedText = await openai.techniqueUsed(transcription);
     const functionalRequirementsText = await openai.functionalRequirements(transcription);
     const nonFunctionalRequirementsText = await openai.nonFunctionalRequirements(transcription);
-    return `${indexText}\n${introductionText}\n${glossaryText}\n${systemEvolutionText}\n${techniqueUsedText}\n${functionalRequirementsText}\n${nonFunctionalRequirementsText}\n`;
+    const compilado = `${indexText}\n${introductionText}\n${glossaryText}\n${systemEvolutionText}\n${techniqueUsedText}\n${functionalRequirementsText}\n${nonFunctionalRequirementsText}\n`;
+    return await createPdf(compilado, "./src/assets/output.pdf");
   } catch (error) {
     console.error('Erro ao manipular o texto, verifique as etapas de manipulação', error);
   }
+}
+
+async function createPdf(compilado, outputPath) {
+  const doc = new PDFDocument();
+
+  try{
+    doc.pipe(fs.createWriteStream(outputPath));
+    doc.fontSize(12).text(compilado);
+    doc.end();
+    console.log('PDF criado com sucesso!');
+  } catch (error) {
+    console.error('Erro:', error);
+  }
+
 }
