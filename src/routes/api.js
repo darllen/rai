@@ -33,7 +33,7 @@ router.post("/transcribe", upload.single("audio"), async (req, res) => {
     try {
         const transcribedText = await transcribeAudio(req.file.path);
         const requirements = await extractRequirements(transcribedText);
-        const htmlPath = await generateHtml(requirements);
+        const htmlPath = await generateHtml(transcribedText, requirements);
         const pdfPath = await convertHtmlToPdf(htmlPath, "public/requisitos.pdf");
 
         res.json({ success: true, pdfPath });
