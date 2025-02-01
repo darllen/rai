@@ -6,9 +6,11 @@ const openai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 async function callChatGPT(prompt) {
     try {
         const response = await openai.chat.completions.create({
-            model: "gpt-4",
-            messages: [{ role: "system", content: "Você é um analista de requisitos." }, { role: "user", content: prompt }],
-            max_tokens: 1000,
+            model: "gpt-4-turbo",
+            messages: [{ role: "system", content: "Você é um engenheiro de requisitos visionário e criativo de requisitos." }, { role: "user", content: prompt }],
+            max_tokens: 5000,
+            temperature: 1.1,
+            top_p: 0.9
         });
 
         return response.choices[0].message.content;
